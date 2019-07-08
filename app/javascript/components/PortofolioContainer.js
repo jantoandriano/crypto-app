@@ -7,18 +7,16 @@ export default class PortofolioContainer extends Component {
     constructor(props){
         super(props)
         this.state = {
-            name: '',
             portofolio: [],
             search_results: [],
             active_currency: null,
             amount: ''
         }
         this.handleChange = this.handleChange.bind(this)
+        this.handleSelect = this.handleSelect.bind(this)
     }
 
     handleChange(e){
-        
-
         axios.post('http://localhost:3000/search', {
             search: e.target.value
         })
@@ -27,19 +25,31 @@ export default class PortofolioContainer extends Component {
                 search_results: [...data.data.currencies]
             })
         })
-        .catch((data)=>{
-            debugger
+        .catch((error)=>{
+            console.log(error)
         })
 
-        console.log(this.state.search_results);
         
     }
 
+    handleSelect(e){
+        e.preventDefault()
+        const id  = e.target.getAttribute('data-id')
+        const activeCurrency = this.state.search_results.filter(item => item.id == parseInt(id))
+        this.setState({
+            active_currency: activeCurrency[0],
+            search_results: []
+        })
+    }
+
+   
+
     render() {
+        const searchOrCalculate = this.state.active_currency ? <Calculate/> : 
+        <Search handleSelect={this.handleSelect} searchResults={this.state.search_results} handleChange={this.handleChange}/>
         return (
             <div>
-                <Search searchResults={this.state.search_results} handleChange={this.handleChange}/>
-                <Calculate/>
+                {searchOrCalculate}
             </div>
         )
     }

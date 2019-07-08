@@ -7,8 +7,8 @@ export default class Search extends Component {
 
     render() {
         const searchResults = this.props.searchResults.map( result =>
-            <li className='currency-list-item' key={result.id}>
-                <a href='#'>
+            <li className='currency-list-item' key={result.id} data-id={result.id} onClick={this.props.handleSelect}>
+                <a href='#' className='currency'>
                     <span>
                         {result.name}
                     </span>
